@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sunmi_printer_flutter/sunmi_printer_flutter.dart'; // Hypothetical plugin import
 
 void main() {
   runApp(const MyApp());
@@ -71,6 +72,37 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> _printCounterValue() async {
+    try {
+      // Initialize printer (assuming this is needed and is idempotent or handled by plugin)
+      // await SunmiPrinter.initialize(); // Specifics depend on plugin API
+
+      // Prepare text to print
+      String textToPrint = 'Current Counter: $_counter';
+
+      // Print the text - assuming a simple text printing method
+      // The actual API might differ (e.g., require specific styling objects)
+      await SunmiPrinter.printText(textToPrint);
+      await SunmiPrinter.lineFeed(3); // Add some empty lines for spacing
+      await SunmiPrinter.cutPaper(); // Cut the paper
+
+      // Optionally, show a success message to the user (e.g., via a SnackBar)
+      if (mounted) { // Check if the widget is still in the tree
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sent to printer!')),
+        );
+      }
+    } catch (e) {
+      // Handle printing errors (e.g., printer not connected, out of paper)
+      print('Error printing: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Printing failed: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -121,7 +153,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () => _changeCounter(false), // Decrement
                   child: const Icon(Icons.remove),
                 ),
-                const SizedBox(width: 20), // Spacer between buttons
+                const SizedBox(width: 10), // Spacer
+                ElevatedButton(
+                  onPressed: _printCounterValue,
+                  child: const Text('Print'),
+                ),
+                const SizedBox(width: 10), // Spacer
                 ElevatedButton(
                   onPressed: () => _changeCounter(true), // Increment
                   child: const Icon(Icons.add),
