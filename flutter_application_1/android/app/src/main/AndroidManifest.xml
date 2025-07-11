@@ -42,4 +42,10 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+
+    <!-- Hypothetical permission for Sunmi Printer Access -->
+    <!-- The actual permissions required will depend on the specific plugin and Sunmi SDK version -->
+    <uses-permission android:name="com.sunmi.perm.COMM_DATA" />
+    <!-- Add other permissions like Bluetooth, Network, etc., if required by the plugin -->
+
 </manifest>
