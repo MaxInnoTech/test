@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sunmi_printer_flutter/sunmi_printer_flutter.dart'; // Hypothetical plugin import
+import 'package:sunmi_printer_plus/sunmi_printer_plus.dart'; // Import for sunmi_printer_plus
 
 void main() {
   runApp(const MyApp());
@@ -72,32 +72,66 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _bindPrinterService();
+  }
+
+  Future<void> _bindPrinterService() async {
+    try {
+      // Using a plausible API name for sunmi_printer_plus
+      await SunmiPrinter.bindingPrinter();
+    } catch (e) {
+      print("Failed to bind printer service: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to bind printer: $e')),
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _unbindPrinterService();
+    super.dispose();
+  }
+
+  Future<void> _unbindPrinterService() async {
+    try {
+      // Using a plausible API name for sunmi_printer_plus
+      await SunmiPrinter.unbindingPrinter();
+    } catch (e) {
+      print("Failed to unbind printer service: $e");
+    }
+  }
+
   Future<void> _printCounterValue() async {
     try {
-      // Initialize printer (assuming this is needed and is idempotent or handled by plugin)
-      // await SunmiPrinter.initialize(); // Specifics depend on plugin API
+      // It's often good practice to ensure the printer is initialized/ready
+      await SunmiPrinter.initPrinter(); // Plausible method
+
+      // Set alignment (optional, depends on plugin and desired output)
+      await SunmiPrinter.setAlignment(SunmiPrintAlign.CENTER); // Plausible enum and method
 
       // Prepare text to print
       String textToPrint = 'Current Counter: $_counter';
 
-      // Print the text - assuming a simple text printing method
-      // The actual API might differ (e.g., require specific styling objects)
       await SunmiPrinter.printText(textToPrint);
-      await SunmiPrinter.lineFeed(3); // Add some empty lines for spacing
-      await SunmiPrinter.cutPaper(); // Cut the paper
+      await SunmiPrinter.lineWrap(3); // Plausible method for line feeds
+      await SunmiPrinter.cutPaper(); // Plausible method
 
-      // Optionally, show a success message to the user (e.g., via a SnackBar)
-      if (mounted) { // Check if the widget is still in the tree
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sent to printer!')),
+          const SnackBar(content: Text('Sent to printer! (using sunmi_printer_plus)')),
         );
       }
     } catch (e) {
-      // Handle printing errors (e.g., printer not connected, out of paper)
-      print('Error printing: $e');
+      print('Error printing with sunmi_printer_plus: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Printing failed: $e')),
+          SnackBar(content: Text('Printing failed (sunmi_printer_plus): $e')),
         );
       }
     }
