@@ -113,25 +113,25 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            const SizedBox(height: 20), // Add space between text and buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center, // Center the buttons horizontally
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () => _changeCounter(false), // Decrement
+                  child: const Icon(Icons.remove),
+                ),
+                const SizedBox(width: 20), // Spacer between buttons
+                ElevatedButton(
+                  onPressed: () => _changeCounter(true), // Increment
+                  child: const Icon(Icons.add),
+                ),
+              ],
+            ),
           ],
         ),
       ),
-      floatingActionButton: Row( // Changed to Row to accommodate two buttons
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          FloatingActionButton(
-            onPressed: () => _changeCounter(false), // Decrement
-            tooltip: 'Decrement',
-            child: const Icon(Icons.remove),
-          ),
-          const SizedBox(width: 10), // Spacer between buttons
-          FloatingActionButton(
-            onPressed: () => _changeCounter(true), // Increment
-            tooltip: 'Increment',
-            child: const Icon(Icons.add),
-          ),
-        ],
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // floatingActionButton removed
     );
   }
 }
